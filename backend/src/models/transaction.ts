@@ -77,7 +77,10 @@ transactionSchema.index({ date: -1 });
 transactionSchema.index({ category: 1 });
 transactionSchema.index({ status: 1 });
 transactionSchema.index({ user_id: 1 });
+transactionSchema.index({ amount: 1 });
 transactionSchema.index({ user_id: 1, date: -1 });
+transactionSchema.index({ category: 1, date: -1 });
+transactionSchema.index({ status: 1, date: -1 });
 transactionSchema.index({ category: 1, status: 1, date: -1 });
 
 export type TransactionDocument = InferSchemaType<typeof transactionSchema>;
