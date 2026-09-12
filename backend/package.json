@@ -8,15 +8,21 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "seed": "tsx src/scripts/seedTransactions.ts"
+    "seed": "tsx src/scripts/seedTransactions.ts",
+    "seed:demo-user": "tsx src/scripts/seedDemoUser.ts"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.0",
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.3.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
