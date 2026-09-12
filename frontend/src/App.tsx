@@ -4,6 +4,7 @@ import { DashboardLayout } from './components/DashboardLayout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { DashboardPage } from './pages/DashboardPage';
 import { LoginPage } from './pages/LoginPage';
+import { TransactionsPage } from './pages/TransactionsPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<DashboardPage />} />
+              <Route path="/transactions" element={<TransactionsPage />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

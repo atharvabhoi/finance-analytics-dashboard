@@ -1,11 +1,13 @@
-import { NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, LogOut, Menu, Wallet, X } from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { ArrowLeftRight, LayoutDashboard, LogOut, Menu, Wallet, X } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 
 export function DashboardLayout() {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const isTransactions = location.pathname.startsWith('/transactions');
 
   return (
     <div className="shell">
@@ -25,6 +27,10 @@ export function DashboardLayout() {
             <LayoutDashboard size={18} />
             Dashboard
           </NavLink>
+          <NavLink to="/transactions" className="nav-item" onClick={() => setSidebarOpen(false)}>
+            <ArrowLeftRight size={18} />
+            Transactions
+          </NavLink>
         </nav>
 
         <button className="nav-item logout" type="button" onClick={logout}>
@@ -39,8 +45,8 @@ export function DashboardLayout() {
             <Menu size={20} />
           </button>
           <div>
-            <p className="eyebrow">Overview</p>
-            <h1>Dashboard</h1>
+            <p className="eyebrow">{isTransactions ? 'Records' : 'Overview'}</p>
+            <h1>{isTransactions ? 'Transactions' : 'Dashboard'}</h1>
           </div>
           <div className="user-chip">
             <span className="user-avatar" aria-hidden="true">

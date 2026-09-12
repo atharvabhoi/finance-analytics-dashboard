@@ -263,6 +263,263 @@ input {
   gap: 1.25rem;
 }
 
+.transactions-page {
+  padding: 1rem 1.5rem 2rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.transactions-toolbar {
+  display: grid;
+  gap: 1rem;
+}
+
+.transactions-search {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0 0.8rem;
+  color: var(--muted);
+}
+
+.transactions-search:focus-within {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(41, 160, 115, 0.12);
+}
+
+.transactions-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0.8rem 0;
+  color: var(--ink);
+  background: transparent;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.filter-grid label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.filter-grid input,
+.filter-grid select {
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  padding: 0.65rem 0.7rem;
+}
+
+.filter-grid input:focus,
+.filter-grid select:focus {
+  outline: 2px solid rgba(41, 160, 115, 0.22);
+  border-color: var(--teal);
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.active-filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.filter-chip,
+.clear-filters {
+  border: 0;
+  background: #eef6d4;
+  color: #385412;
+  border-radius: 999px;
+  padding: 0.36rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.clear-filters {
+  background: transparent;
+  color: var(--teal);
+  padding-inline: 0.25rem;
+}
+
+.transactions-panel {
+  min-width: 0;
+}
+
+.transactions-panel-header,
+.pagination,
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.transactions-panel-header {
+  margin-bottom: 1rem;
+}
+
+.transactions-panel-header h2 {
+  font-size: 1.1rem;
+}
+
+.transaction-count,
+.pagination {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.transaction-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  font-size: 0.88rem;
+}
+
+.transactions-table th,
+.transactions-table td {
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.transactions-table th {
+  background: #fbfbfb;
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.transactions-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sort-button.is-active {
+  color: var(--ink);
+}
+
+.user-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #4b5563;
+}
+
+.category-tag {
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.category-tag.is-revenue {
+  color: #087152;
+  background: #dff6ed;
+}
+
+.category-tag.is-expense {
+  color: #a51d3c;
+  background: #fff0f3;
+}
+
+.table-amount {
+  font-weight: 700;
+  text-align: right !important;
+}
+
+.table-amount.is-revenue {
+  color: var(--teal);
+}
+
+.table-amount.is-expense {
+  color: var(--danger);
+}
+
+.transaction-state {
+  min-height: 220px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.65rem;
+  text-align: center;
+}
+
+.table-skeleton {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.table-skeleton .skeleton {
+  height: 3.1rem;
+}
+
+.pagination {
+  padding-top: 1rem;
+}
+
+.pagination-controls {
+  font-size: 0.8rem;
+}
+
+.pagination-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 9px;
+  padding: 0.5rem 0.65rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.pagination-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -445,6 +702,10 @@ input {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+
+  .filter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 800px) {
@@ -486,6 +747,10 @@ input {
   .status-pill {
     grid-column: 2;
   }
+
+  .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
@@ -498,5 +763,78 @@ input {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .dashboard,
+  .transactions-page {
+    padding-inline: 1rem;
+  }
+
+  .topbar {
+    padding-inline: 1rem;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transactions-panel-header,
+  .pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pagination-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .transactions-table-wrap {
+    overflow: visible;
+    border: 0;
+  }
+
+  .transactions-table {
+    min-width: 0;
+  }
+
+  .transactions-table thead {
+    display: none;
+  }
+
+  .transactions-table,
+  .transactions-table tbody,
+  .transactions-table tr,
+  .transactions-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .transactions-table tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0.3rem 0;
+  }
+
+  .transactions-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0.75rem;
+    white-space: normal;
+  }
+
+  .transactions-table td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .table-amount {
+    text-align: left !important;
   }
 }

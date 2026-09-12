@@ -35,6 +35,32 @@ export interface Transaction {
   user_profile: string;
 }
 
+export type TransactionSortBy = 'id' | 'date' | 'amount' | 'category' | 'status' | 'user_id';
+export type SortOrder = 'asc' | 'desc';
+
+export interface TransactionQuery {
+  search?: string;
+  category?: Transaction['category'];
+  status?: Transaction['status'];
+  user?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  minAmount?: string;
+  maxAmount?: string;
+  sortBy?: TransactionSortBy;
+  sortOrder?: SortOrder;
+  page?: number;
+  limit?: number;
+}
+
+export interface TransactionListResponse {
+  data: Transaction[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface ApiMessage {
   message: string;
 }

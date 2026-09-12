@@ -5,6 +5,8 @@ import type {
   MeResponse,
   MonthlyOverview,
   Transaction,
+  TransactionListResponse,
+  TransactionQuery,
   User,
 } from '../types/api';
 
@@ -123,4 +125,18 @@ export async function fetchDashboardOverview(): Promise<MonthlyOverview[]> {
 export async function fetchRecentTransactions(limit = 5): Promise<Transaction[]> {
   const payload = await apiRequest<DataResponse<Transaction[]>>(`/api/dashboard/recent?limit=${limit}`);
   return payload.data;
+}
+
+export async function fetchTransactions(query: TransactionQuery): Promise<TransactionListResponse> {
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined || value === '') {
+      continue;
+    }
+    params.set(key, String(value));
+  }
+
+  const suffix = params.size > 0 ? `?${params.toString()}` : '';
+  return apiRequest<TransactionListResponse>(`/api/transactions${suffix}`);
 }
