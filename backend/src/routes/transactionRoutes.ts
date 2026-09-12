@@ -15,7 +15,7 @@ const MAX_SEARCH_LENGTH = 100;
 const sortableFields = ['id', 'date', 'amount', 'category', 'status', 'user_id'] as const;
 type SortableField = (typeof sortableFields)[number];
 
-class QueryValidationError extends Error {}
+export class QueryValidationError extends Error {}
 
 function readQueryValue(query: Request['query'], key: string): string | undefined {
   const value = query[key];
@@ -88,7 +88,7 @@ interface TransactionQueryOptions {
   limit: number;
 }
 
-function parseTransactionQuery(request: Request): TransactionQueryOptions {
+export function parseTransactionQuery(request: Request): TransactionQueryOptions {
   const search = readQueryValue(request.query, 'search');
   const category = readQueryValue(request.query, 'category');
   const status = readQueryValue(request.query, 'status');

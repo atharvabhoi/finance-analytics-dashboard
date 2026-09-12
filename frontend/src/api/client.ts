@@ -5,6 +5,7 @@ import type {
   MeResponse,
   MonthlyOverview,
   Transaction,
+  TransactionExportQuery,
   TransactionListResponse,
   TransactionQuery,
   User,
@@ -139,4 +140,35 @@ export async function fetchTransactions(query: TransactionQuery): Promise<Transa
 
   const suffix = params.size > 0 ? `?${params.toString()}` : '';
   return apiRequest<TransactionListResponse>(`/api/transactions${suffix}`);
+}
+
+export async function downloadTransactionsCsv(query: TransactionExportQuery): Promise<Blob> {
+  const params = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(query)) {
+    if (key === 'columns' || value === undefined || value === '') {
+      continue;
+    }
+    params.set(key, String(value));
+  }
+  params.set('columns', query.columns.join(','));
+
+  const response = await fetch(`${apiBaseUrl}/api/transactions/export?${params.toString()}`, {
+    headers: { Authorization: `Bearer ${getStoredToken() ?? ''}` },
+  });
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      unauthorizedHandler?.();
+    }
+
+    const payload: unknown = await response.json().catch(() => null);
+    const message =
+      payload && typeof payload === 'object' && 'message' in payload && typeof payload.message === 'string'
+        ? payload.message
+        : 'Unable to export transactions.';
+    throw new ApiError(message, response.status);
+  }
+
+  return response.blob();
 }

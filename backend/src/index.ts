@@ -4,6 +4,7 @@ import { connectToDatabase } from './config/database.js';
 import { corsOrigin } from './config/environment.js';
 import { authRouter } from './routes/authRoutes.js';
 import { dashboardRouter } from './routes/dashboardRoutes.js';
+import { transactionExportRouter } from './routes/transactionExportRoutes.js';
 import { transactionRouter } from './routes/transactionRoutes.js';
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors({ origin: corsOrigin }));
 app.use(express.json({ limit: '16kb' }));
 app.use('/api/auth', authRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/transactions', transactionExportRouter);
 app.use('/api/transactions', transactionRouter);
 
 app.use((_request, response) => {

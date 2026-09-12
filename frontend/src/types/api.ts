@@ -61,6 +61,24 @@ export interface TransactionListResponse {
   totalPages: number;
 }
 
+export const transactionExportColumns = [
+  'id',
+  'date',
+  'amount',
+  'category',
+  'status',
+  'user_id',
+  'user_profile',
+] as const;
+
+export type TransactionExportColumn = (typeof transactionExportColumns)[number];
+export type TransactionExportScope = 'current' | 'all';
+
+export interface TransactionExportQuery extends Omit<TransactionQuery, 'page' | 'limit' | 'sortBy' | 'sortOrder'> {
+  scope: TransactionExportScope;
+  columns: TransactionExportColumn[];
+}
+
 export interface ApiMessage {
   message: string;
 }

@@ -5,12 +5,21 @@ import {
   ArrowUpDown,
   ChevronLeft,
   ChevronRight,
+  Download,
   Search,
   SlidersHorizontal,
   X,
 } from 'lucide-react';
-import { ApiError, fetchTransactions } from '../api/client';
-import type { SortOrder, Transaction, TransactionQuery, TransactionSortBy } from '../types/api';
+import { ApiError, downloadTransactionsCsv, fetchTransactions } from '../api/client';
+import {
+  transactionExportColumns,
+  type SortOrder,
+  type Transaction,
+  type TransactionExportColumn,
+  type TransactionExportScope,
+  type TransactionQuery,
+  type TransactionSortBy,
+} from '../types/api';
 import { formatCurrency, formatDate } from '../utils/format';
 
 const PAGE_SIZE = 20;
@@ -69,6 +78,13 @@ export function TransactionsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reloadCount, setReloadCount] = useState(0);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportScope, setExportScope] = useState<TransactionExportScope>('current');
+  const [selectedColumns, setSelectedColumns] = useState<TransactionExportColumn[]>([...transactionExportColumns]);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [allTransactionCount, setAllTransactionCount] = useState<number | null>(null);
+  const [allCountLoading, setAllCountLoading] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -126,6 +142,35 @@ export function TransactionsPage() {
     };
   }, [query, reloadCount]);
 
+  useEffect(() => {
+    if (!exportOpen || exportScope !== 'all') {
+      return;
+    }
+
+    let cancelled = false;
+    setAllCountLoading(true);
+    fetchTransactions({ page: 1, limit: 1 })
+      .then((response) => {
+        if (!cancelled) {
+          setAllTransactionCount(response.total);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setAllTransactionCount(null);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setAllCountLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [exportOpen, exportScope]);
+
   const activeFilters = useMemo(() => {
     const chips: Array<{ key: keyof FilterState | 'search'; label: string }> = [];
     if (search) chips.push({ key: 'search', label: `Search: ${search}` });
@@ -171,8 +216,63 @@ export function TransactionsPage() {
     setPage(1);
   }
 
+  function toggleColumn(column: TransactionExportColumn) {
+    setSelectedColumns((current) =>
+      current.includes(column) ? current.filter((item) => item !== column) : [...current, column],
+    );
+  }
+
+  function closeExportDialog() {
+    if (!exportLoading) {
+      setExportOpen(false);
+      setExportError(null);
+    }
+  }
+
+  async function downloadCsv() {
+    if (selectedColumns.length === 0) {
+      setExportError('Select at least one column to export.');
+      return;
+    }
+
+    setExportLoading(true);
+    setExportError(null);
+    try {
+      const csv = await downloadTransactionsCsv({
+        scope: exportScope,
+        columns: selectedColumns,
+        ...(exportScope === 'current'
+          ? {
+              search: search || undefined,
+              category: filters.category || undefined,
+              status: filters.status || undefined,
+              user: filters.user || undefined,
+              dateFrom: filters.dateFrom || undefined,
+              dateTo: filters.dateTo || undefined,
+              minAmount: filters.minAmount || undefined,
+              maxAmount: filters.maxAmount || undefined,
+            }
+          : {}),
+      });
+      const url = window.URL.createObjectURL(csv);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'transactions.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      setExportOpen(false);
+    } catch (caught: unknown) {
+      setExportError(getErrorMessage(caught));
+    } finally {
+      setExportLoading(false);
+    }
+  }
+
   const firstItem = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const lastItem = Math.min(page * PAGE_SIZE, total);
+  const selectedRecordCount = exportScope === 'current' ? total : allTransactionCount;
 
   return (
     <main className="transactions-page">
@@ -246,7 +346,12 @@ export function TransactionsPage() {
             <p className="eyebrow">Transaction history</p>
             <h2>All transactions</h2>
           </div>
-          <p className="transaction-count">{loading ? 'Loading…' : `${total} records`}</p>
+          <div className="transactions-header-actions">
+            <p className="transaction-count">{loading ? 'Loading…' : `${total} records`}</p>
+            <button className="export-button" type="button" onClick={() => setExportOpen(true)}>
+              <Download size={16} aria-hidden="true" /> Export CSV
+            </button>
+          </div>
         </div>
 
         {error ? (
@@ -314,6 +419,64 @@ export function TransactionsPage() {
           </div>
         ) : null}
       </section>
+
+      {exportOpen ? (
+        <div className="export-modal-backdrop" role="presentation" onMouseDown={closeExportDialog}>
+          <section
+            className="export-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="export-dialog-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="export-modal-header">
+              <div>
+                <p className="eyebrow">Transactions</p>
+                <h2 id="export-dialog-title">Export CSV</h2>
+              </div>
+              <button className="modal-close" type="button" aria-label="Close export dialog" onClick={closeExportDialog} disabled={exportLoading}>
+                <X size={19} />
+              </button>
+            </div>
+
+            <fieldset className="export-section">
+              <legend>Export scope</legend>
+              <label className="export-scope-option">
+                <input type="radio" name="export-scope" checked={exportScope === 'current'} onChange={() => setExportScope('current')} />
+                <span><strong>Current filtered results</strong><small>Uses the active search and filters, without pagination.</small></span>
+              </label>
+              <label className="export-scope-option">
+                <input type="radio" name="export-scope" checked={exportScope === 'all'} onChange={() => setExportScope('all')} />
+                <span><strong>All transactions</strong><small>Ignores current filters.</small></span>
+              </label>
+            </fieldset>
+
+            <div className="export-section">
+              <p className="export-section-title">Columns</p>
+              <div className="export-columns">
+                {transactionExportColumns.map((column) => (
+                  <label key={column}>
+                    <input type="checkbox" checked={selectedColumns.includes(column)} onChange={() => toggleColumn(column)} />
+                    {column}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <p className="export-count">
+              {allCountLoading && exportScope === 'all' ? 'Checking selected records…' : `${selectedRecordCount ?? '—'} record${selectedRecordCount === 1 ? '' : 's'} selected`}
+            </p>
+            {exportError ? <p className="form-error" role="alert">{exportError}</p> : null}
+
+            <div className="export-actions">
+              <button className="secondary-button" type="button" onClick={closeExportDialog} disabled={exportLoading}>Cancel</button>
+              <button className="primary-button" type="button" onClick={() => void downloadCsv()} disabled={exportLoading || selectedColumns.length === 0}>
+                <Download size={16} aria-hidden="true" /> {exportLoading ? 'Preparing…' : 'Download CSV'}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </main>
   );
 }

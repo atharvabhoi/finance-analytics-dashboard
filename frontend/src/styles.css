@@ -394,6 +394,36 @@ input {
   font-size: 0.85rem;
 }
 
+.transactions-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.export-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.58rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.export-button {
+  border: 0;
+  background: var(--ink);
+  color: #fff;
+}
+
+.secondary-button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
 .transaction-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -518,6 +548,131 @@ input {
 .pagination-button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.export-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(15, 18, 22, 0.56);
+}
+
+.export-modal {
+  width: min(100%, 580px);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  border-radius: 20px;
+  background: #fff;
+  padding: 1.35rem;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.export-modal-header,
+.export-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.export-modal-header h2 {
+  font-size: 1.2rem;
+}
+
+.modal-close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.export-section {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.2rem 0;
+  padding: 0;
+  border: 0;
+}
+
+.export-section legend,
+.export-section-title {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.export-scope-option {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.export-scope-option input {
+  margin-top: 0.18rem;
+  accent-color: var(--teal);
+}
+
+.export-scope-option span {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.export-scope-option small {
+  color: var(--muted);
+}
+
+.export-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.export-columns label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 0.55rem 0.65rem;
+  color: #4b5563;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+.export-columns input {
+  accent-color: var(--teal);
+}
+
+.export-count {
+  border-radius: 10px;
+  background: #eef6d4;
+  color: #385412;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.export-actions {
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.export-actions .primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .summary-grid {
